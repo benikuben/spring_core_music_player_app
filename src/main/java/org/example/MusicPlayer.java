@@ -1,37 +1,30 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import java.util.Random;
 
+@Component("musicPlayer")
 public class MusicPlayer {
-    private List<Music> musicList = new ArrayList<>();
-    private String name;
-    private int volume;
 
-    public String getName() {
-        return name;
+    private ClassicalMusic classicalMusicList;
+    private RockMusic rockMusicList;
+
+    @Autowired
+    public MusicPlayer(@Qualifier("classicalMusic") ClassicalMusic classicalMusicList,
+                       @Qualifier("rockMusic") RockMusic rockMusicList) {
+        this.classicalMusicList = classicalMusicList;
+        this.rockMusicList = rockMusicList;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String playMusic(Enum<MusicGenres> MusicGenre) {
+        Random random = new Random();
+        if (MusicGenre == MusicGenres.CLASSICAL)
+            return "Playing: " + classicalMusicList.getSongs().get(random.nextInt(3));
+        else if (MusicGenre == MusicGenres.ROCK)
+            return "Playing: " + rockMusicList.getSongs().get(random.nextInt(3));
+        return null;
     }
 
-    public int getVolume() {
-        return volume;
-    }
-
-    public void setVolume(int volume) {
-        this.volume = volume;
-    }
-
-    public void playMusic() {
-        System.out.println("Playing: ");
-        musicList.stream().forEach(music-> System.out.println(music.getSong()));
-    }
-
-    //IoC
-    public void setMusicList(Music[] music) {
-        musicList.addAll(Arrays.asList(music));
-    }
 }
