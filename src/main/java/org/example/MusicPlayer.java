@@ -1,30 +1,26 @@
 package org.example;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import java.util.List;
 import java.util.Random;
 
-@Component("musicPlayer")
 public class MusicPlayer {
+    private List<Music> songs;
 
-    private ClassicalMusic classicalMusicList;
-    private RockMusic rockMusicList;
-
-    @Autowired
-    public MusicPlayer(@Qualifier("classicalMusic") ClassicalMusic classicalMusicList,
-                       @Qualifier("rockMusic") RockMusic rockMusicList) {
-        this.classicalMusicList = classicalMusicList;
-        this.rockMusicList = rockMusicList;
+    public MusicPlayer(List<Music> songs) {
+        this.songs = songs;
     }
 
-    public String playMusic(Enum<MusicGenres> MusicGenre) {
-        Random random = new Random();
-        if (MusicGenre == MusicGenres.CLASSICAL)
-            return "Playing: " + classicalMusicList.getSongs().get(random.nextInt(3));
-        else if (MusicGenre == MusicGenres.ROCK)
-            return "Playing: " + rockMusicList.getSongs().get(random.nextInt(3));
+    public String playMusic() {
+        Random random =new Random();
+        int randomGenre = random.nextInt(3);
+        switch (randomGenre){
+            case 0:
+                return "Playing: " + songs.get(0).getSongs().get(random.nextInt(3));
+            case 1:
+                return "Playing: " + songs.get(1).getSongs().get(random.nextInt(3));
+            case 2:
+                return "Playing: " + songs.get(2).getSongs().get(random.nextInt(3));
+        }
         return null;
     }
-
 }
